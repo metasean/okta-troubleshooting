@@ -41,7 +41,10 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    // https://github.com/nuxt-community/dotenv-module#usage
+    ['@nuxtjs/dotenv', { systemvars: true }],
+    ['@nuxtjs/router', { keepDefaultRouter: true }]
   ],
   /*
   ** Axios module configuration

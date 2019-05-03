@@ -1,22 +1,35 @@
-# okta-troubleshooting
+# The Problem
+When logging in with this configuration and the standard `@okta/okta-vue` module, the user is taken to the Okta log-in page 👍, then redirected back to `http://localhost:8081/implicit/callback` for a split second before being taken to `http://localhost:8081/implicit/[object%20MouseEvent]` 😳⁉️
 
-> My incredible Nuxt.js project
+The section below is how I've been able to get it working, but 🤢🤮 🙅‍♂️.  
 
-## Build Setup
+I don't know if I'm consuming `@okta/okta-vue` incorrectly, or if there's a genuine problem with the provided `implicitCallback.vue` (if that's the case, I'm confident that the solution below is is **_not_** the optimal solution).
 
-``` bash
-# install dependencies
-$ npm install
+## VERY HACKY ¿ FIX ⸮ 
 
-# serve with hot reload at localhost:3000
-$ npm run dev
+After running the standard `npm install`, **_replace_** `node_modules/@okta/okta-vue/src/components/implicitCallback.vue`
+with,
 
-# build for production and launch server
-$ npm run build
-$ npm start
+```javascript
+<script>
+export default {
+  name: 'ImplicitCallback',
+  async beforeMount () {
+    await this.$auth.handleAuthentication()
+    // const path = await this.$auth.getFromUri()
+    // DOES NO GOOD
+    // console.log('path:', path)
 
-# generate static project
-$ npm run generate
+    // THIS IN CONJUNCTION WITH THE SAME CALL INSIDE
+    // this.$router.replace
+    // IS THE ONLY THING THAT SEEMS TO MAKE IT WORK
+    this.$auth.getFromUri()                    // FIRST CALL
+    
+    this.$router.replace({
+      path: this.$auth.getFromUri()           // SECOND CALL
+    })
+  },
+  render () {}
+}
+</script>
 ```
-
-For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).

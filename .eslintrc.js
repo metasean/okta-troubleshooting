@@ -13,5 +13,11 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
+    'no-console': [
+      'warn',
+      {
+        allow: ['warn', 'error', 'log', 'info', 'trace', 'debug', 'group', 'groupCollapsed', 'groupEnd'],
+      },
+    ],
   }
 }
